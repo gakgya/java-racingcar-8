@@ -12,7 +12,8 @@ public class Application {
         // TODO: 프로그램 구현
         String inputCarList = inputCar();
         Integer inputMaxMove = inputMaxMove();
-        Map<String , Integer> carNameMap = validate(inputCarList);
+        Map<String , Integer> carNameMap = registrationCar(inputCarList);
+        raceStart(carNameMap,inputMaxMove);
     }
 
     private static String inputCar(){
@@ -25,17 +26,51 @@ public class Application {
         return Integer.parseInt(Console.readLine());
     }
 
-    private static Map<String , Integer> validate(String inputCarName){
+    private static Map<String , Integer> registrationCar(String inputCarName){
         String[] carNameArray = inputCarName.split(",");
         Map<String , Integer> tempMap = new HashMap<>();
         for (String carName : carNameArray) {
-            if(carName.length() > 5){
-                 throw new IllegalArgumentException("자동차 이름은 5자 이하만 가능합니다: " + carName);
-            }else{
-                tempMap.put(carName, 0);
-            }
+           tempMap.put(validate(carName),0);
         }
         return tempMap;
+    }
+
+    private static String validate(String carName){
+        if(carName.length() > 5){
+            throw new IllegalArgumentException("자동차 이름은 5자 이하만 가능합니다: " + carName);
+        }else{
+            return carName;
+        }
+    }
+
+    private static void raceStart(Map<String , Integer> carList , Integer inputMaxMove){
+        for (int i = 0; i < inputMaxMove; i++) {
+            System.out.println("\n");
+            moveFoward(carList);
+        }
+    }
+
+    private static void moveFoward(Map<String , Integer> carList){
+        for (String car : carList.keySet()) {
+            carList.put(car, randomGo(carList.get(car)));
+            System.out.println(car + " : " + forwardStatPrint(carList.get(car)));
+        }
+    }
+
+    private static Integer randomGo(Integer moveStat){
+        if(Randoms.pickNumberInRange(0, 9)>=4){
+            return moveStat+1;
+        }else{
+            return moveStat;
+        }
+    }
+
+    private static String forwardStatPrint(Integer moveStat){
+        String temp = "";
+        for(int i = 0; i < moveStat; i++){
+            temp += "-";
+        }
+        return temp;
     }
 }
 
